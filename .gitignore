@@ -1,0 +1,8 @@
+bin/
+include/
+lib/
+lib64/
+bg-listening.py
+devices.py
+mic-rec.py
+pyvenv.cfg
