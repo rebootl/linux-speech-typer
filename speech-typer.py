@@ -8,6 +8,20 @@ from pynput.keyboard import Key, Controller
 
 keyboard = Controller()
 
+special_emojis = {
+    'see_no_evil': ':see_no_evil:',
+    'sleeping_relax': ':sleeping: :relaxed:',
+    'pog': ':minchePog:',
+    'park': ':minchePog:',
+    'pug': ':minchePog:',
+    'thinking_face': ':mincheThink:',
+#    'hug': ':hugging:',
+#    'talk': ':hugging:',
+#    'smiling face': ':D',
+#    'relaxed face': ':relaxed:',
+#    'sleeping face': ':sleeping:',
+}
+
 keys = {
     'enter': Key.enter,
     'space': Key.space,
@@ -58,7 +72,16 @@ def on_recognize(r):
 
     words = r.split(' ')
 
-    if words[0].lower() in keys:
+    if words[0].lower() == 'emoji':
+        p = '_'.join([w.lower() for w in words[1:]])
+        if p in special_emojis:
+            keyboard.type(special_emojis[p])
+        else:
+            e = ':' + p + ':'
+            keyboard.type(e)
+        press_key(Key.enter)
+        return
+    elif words[0].lower() in keys:
         n = 1
         if (len(words) > 1):
             n = get_number(words[1].lower())
