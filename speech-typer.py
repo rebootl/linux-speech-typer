@@ -8,36 +8,82 @@ from pynput.keyboard import Key, Controller
 
 keyboard = Controller()
 
+mode = 'TEXT'
+
 special_emojis = {
-    'see_no_evil': ':see_no_evil:',
     'sleeping_relax': ':sleeping: :relaxed:',
     'pog': ':minchePog:',
     'park': ':minchePog:',
     'pug': ':minchePog:',
     'thinking_face': ':mincheThink:',
-#    'hug': ':hugging:',
-#    'talk': ':hugging:',
-#    'smiling face': ':D',
-#    'relaxed face': ':relaxed:',
-#    'sleeping face': ':sleeping:',
 }
 
 keys = {
     'enter': Key.enter,
+    'center': Key.enter,
+    'hunter': Key.enter,
+    'wetter': Key.enter,
     'space': Key.space,
+    'keyspace': Key.space,
     'backspace': Key.backspace,
     'delete': Key.delete,
-    'left': Key.left,
-    'right': Key.right,
-    'up': Key.up,
-    'down': Key.down,
+    'arrow left': Key.left,
+    'arrow right': Key.right,
+    'arrow write': Key.right,
+    'arrow up': Key.up,
+    'arrow down': Key.down,
     'tab': Key.tab,
+    'tabulator': Key.tab,
+    'page up': Key.page_up,
+    'page down': Key.page_down,
+}
+
+key_combos = {
+    'alt-tab': (Key.alt, Key.tab),
+    'desktop 1': (Key.cmd, '1'),
+    'desktop one': (Key.cmd, '1'),
+    'desktop phone': (Key.alt_l, '1'),
+    'desktop two': (Key.alt_l, '2'),
+    'desktop to' : (Key.alt_l, '2'),
+    'desktop 3' : (Key.alt_l, '3'),
+    'desktop for' : (Key.alt_l, '4'),
+    'desktop 5' : (Key.alt_l, '5'),
+    'desktop 6' : (Key.alt_l, '6'),
+    'desktop sex' : (Key.alt_l, '6'),
+    'tabulator back' : (Key.shift, Key.tab),
+    'control c' : (Key.ctrl, 'c'),
+    'control x' : (Key.ctrl, 'x'),
+    'control v' : (Key.ctrl, 'v'),
+    'ctrl-v' : (Key.ctrl, 'v'),
+    'control s' : (Key.ctrl, 's'),
+    'control z' : (Key.ctrl, 'z'),
+    'control r' : (Key.ctrl, 'r'),
+    'control are' : (Key.ctrl, 'r'),
+}
+
+modifier_keys = {
+    'alternate': Key.alt,
+    'control': Key.ctrl,
+    'shift': Key.shift
+}
+
+special_keys = {
+    'equal': '=',
+    'equals': '=',
+    'equal spaced': ' = ',
+    'dash': '-',
+    'backtick': '`',
+    'dollar sign': '$',
 }
 
 numbers = {
     'one': 1,
     'two': 2,
+    'to': 2,
     'three': 3,
+    'tree': 3,
+    'free': 3,
+    'for': 4,
     'four': 4,
     'five': 5,
     'six': 6,
@@ -61,34 +107,65 @@ def get_number(n):
     except ValueError:
         if (n in numbers):
             return numbers[n]
-        return 1
+        return False
 
 def press_key(k, n = 1):
     for c in range(n):
         keyboard.press(k)
         keyboard.release(k)
 
+def press_key_combo(ks):
+    with keyboard.pressed(ks[0]):
+        keyboard.press(ks[1])
+        keyboard.release(ks[1])
+
+def get_words_without_number(words):
+    n = get_number(words[-1:][0])
+    if n:
+        r = ' '.join(words[:-1])
+    else:
+        r = ' '.join(words)
+    return r, n
+
 def on_recognize(r):
 
-    words = r.split(' ')
+    global mode
 
-    if words[0].lower() == 'emoji':
-        p = '_'.join([w.lower() for w in words[1:]])
+    words = r.lower().split(' ')
+    words_without_number, repeats = get_words_without_number(words)
+    # print(words_without_number, repeats)
+
+    if words[0] == 'mode':
+        if words[1] == 'text':
+            mode = 'TEXT'
+        elif words[1] == 'programming':
+            mode = 'PROG'
+    elif words[0] == 'emoji':
+        p = '_'.join(words[1:])
         if p in special_emojis:
             keyboard.type(special_emojis[p])
         else:
             e = ':' + p + ':'
             keyboard.type(e)
         press_key(Key.enter)
-        return
-    elif words[0].lower() in keys:
-        n = 1
-        if (len(words) > 1):
-            n = get_number(words[1].lower())
-        press_key(keys[words[0].lower()], n)
+    elif words_without_number in keys:
+        if repeats:
+            press_key(keys[words_without_number], repeats)
+        else:
+            press_key(keys[words_without_number])
+    elif r.lower() in key_combos:
+        press_key_combo(key_combos[r.lower()])
+    elif r.lower() in special_keys:
+        keyboard.type(special_keys[words[0]])
+    elif words[0] == 'letter':
+        keyboard.type(words[1])
+    elif words[0] == 'number':
+        keyboard.type(str(get_number(words[1])))
     else:
-        keyboard.type(r + ' ')
-
+        if mode == 'TEXT':
+            keyboard.type(r.lower() + ' ')
+        elif mode == 'PROG':
+            keyboard.type(r.lower())
 
 # this is called from the background thread
 def callback(recognizer, audio):
@@ -97,14 +174,15 @@ def callback(recognizer, audio):
         # for testing purposes, we're just using the default API key
         # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
         # instead of `r.recognize_google(audio)`
-        print('>>>')
+        print('~~~')
         result = recognizer.recognize_google(audio)
-        print("Result: " + result)
+        print('Result: ' + result)
         on_recognize(result)
+        print(mode + ' >>>')
     except sr.UnknownValueError:
-        print("...")
+        print('...')
     except sr.RequestError as e:
-        print("Could not request results from Google Speech Recognition service; {0}".format(e))
+        print('Could not request results from Google Speech Recognition service; {0}'.format(e))
 
 def start_typer(device):
     r = sr.Recognizer()
@@ -135,7 +213,7 @@ def start_typer(device):
 def list_devices():
     import pyaudio
     p = pyaudio.PyAudio()
-    print("Devices:")
+    print('Devices:')
     for i in range(p.get_device_count()):
         d = p.get_device_info_by_index(i)
         print(f"{d['index']}: {d['name']}")
