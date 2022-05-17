@@ -8,16 +8,6 @@ from pynput.keyboard import Key, Controller
 
 keyboard = Controller()
 
-mode = 'TEXT'
-
-special_emojis = {
-    'sleeping_relax': ':sleeping: :relaxed:',
-    'pog': ':minchePog:',
-    'park': ':minchePog:',
-    'pug': ':minchePog:',
-    'thinking_face': ':mincheThink:',
-}
-
 keys = {
     'enter': Key.enter,
     'center': Key.enter,
@@ -38,66 +28,34 @@ keys = {
     'page down': Key.page_down,
 }
 
-key_combos = {
-    'alt-tab': (Key.alt, Key.tab),
-    'desktop 1': (Key.cmd, '1'),
-    'desktop one': (Key.cmd, '1'),
-    'desktop phone': (Key.alt_l, '1'),
-    'desktop two': (Key.alt_l, '2'),
-    'desktop to' : (Key.alt_l, '2'),
-    'desktop 3' : (Key.alt_l, '3'),
-    'desktop for' : (Key.alt_l, '4'),
-    'desktop 5' : (Key.alt_l, '5'),
-    'desktop 6' : (Key.alt_l, '6'),
-    'desktop sex' : (Key.alt_l, '6'),
-    'tabulator back' : (Key.shift, Key.tab),
-    'control c' : (Key.ctrl, 'c'),
-    'control x' : (Key.ctrl, 'x'),
-    'control v' : (Key.ctrl, 'v'),
-    'ctrl-v' : (Key.ctrl, 'v'),
-    'control s' : (Key.ctrl, 's'),
-    'control z' : (Key.ctrl, 'z'),
-    'control r' : (Key.ctrl, 'r'),
-    'control are' : (Key.ctrl, 'r'),
-}
-
-modifier_keys = {
-    'alternate': Key.alt,
-    'control': Key.ctrl,
-    'shift': Key.shift
-}
-
-special_keys = {
+replacements = {
     'equal': '=',
     'equals': '=',
     'equal spaced': ' = ',
     'dash': '-',
     'backtick': '`',
     'dollar sign': '$',
-}
-
-numbers = {
-    'one': 1,
-    'two': 2,
-    'to': 2,
-    'three': 3,
-    'tree': 3,
-    'free': 3,
-    'for': 4,
-    'four': 4,
-    'five': 5,
-    'six': 6,
-    'seven': 7,
-    'eight': 8,
-    'nine': 9,
-    'ten': 10,
-    'eleven': 11,
-    'twelve': 12,
-    'thirteen': 13,
-    'fourteen': 14,
-    'fifteen': 15,
-    'twenty': 20,
-    'twentyfive': 25,
+    'one': '1',
+    'two': '2',
+    'to': '2',
+    'three': '3',
+    'tree': '3',
+    'free': '3',
+    'for': '4',
+    'four': '4',
+    'five': '5',
+    'six': '6',
+    'seven': '7',
+    'eight': '8',
+    'nine': '9',
+    'ten': '10',
+    'eleven': '11',
+    'twelve': '12',
+    'thirteen': '13',
+    'fourteen': '14',
+    'fifteen': '15',
+    'twenty': '20',
+    'twentyfive': '25',
 }
 
 def get_number(n):
@@ -114,10 +72,10 @@ def press_key(k, n = 1):
         keyboard.press(k)
         keyboard.release(k)
 
-def press_key_combo(ks):
-    with keyboard.pressed(ks[0]):
-        keyboard.press(ks[1])
-        keyboard.release(ks[1])
+#def press_key_combo(ks):
+#    with keyboard.pressed(ks[0]):
+#        keyboard.press(ks[1])
+#        keyboard.release(ks[1])
 
 def get_words_without_number(words):
     n = get_number(words[-1:][0])
@@ -127,45 +85,16 @@ def get_words_without_number(words):
         r = ' '.join(words)
     return r, n
 
-def on_recognize(r):
+def on_recognize(text):
 
-    global mode
+    textlower = text.lower()
 
-    words = r.lower().split(' ')
-    words_without_number, repeats = get_words_without_number(words)
-    # print(words_without_number, repeats)
-
-    if words[0] == 'mode':
-        if words[1] == 'text':
-            mode = 'TEXT'
-        elif words[1] == 'programming':
-            mode = 'PROG'
-    elif words[0] == 'emoji':
-        p = '_'.join(words[1:])
-        if p in special_emojis:
-            keyboard.type(special_emojis[p])
-        else:
-            e = ':' + p + ':'
-            keyboard.type(e)
-        press_key(Key.enter)
-    elif words_without_number in keys:
-        if repeats:
-            press_key(keys[words_without_number], repeats)
-        else:
-            press_key(keys[words_without_number])
-    elif r.lower() in key_combos:
-        press_key_combo(key_combos[r.lower()])
-    elif r.lower() in special_keys:
-        keyboard.type(special_keys[words[0]])
-    elif words[0] == 'letter':
-        keyboard.type(words[1])
-    elif words[0] == 'number':
-        keyboard.type(str(get_number(words[1])))
+    if textlower in keys:
+        press_key(keys[textlower])
+    elif textlower in replacements:
+        keyboard.type(replacements[textlower] + ' ')
     else:
-        if mode == 'TEXT':
-            keyboard.type(r.lower() + ' ')
-        elif mode == 'PROG':
-            keyboard.type(r.lower())
+        keyboard.type(textlower + ' ')
 
 # this is called from the background thread
 def callback(recognizer, audio):
