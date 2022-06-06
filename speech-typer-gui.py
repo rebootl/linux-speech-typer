@@ -107,7 +107,7 @@ def callback(recognizer, audio):
         result = recognizer.recognize_google(audio)
         print('Result: ' + result)
         on_recognize(result)
-        print(mode + ' >>>')
+        print('>>>')
     except sr.UnknownValueError:
         print('...')
     except sr.RequestError as e:
