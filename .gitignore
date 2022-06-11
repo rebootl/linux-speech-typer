@@ -3,6 +3,7 @@ include/
 lib/
 lib64/
 venv/
+env/
 bg-listening.py
 devices.py
 mic-rec.py
