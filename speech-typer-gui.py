@@ -13,6 +13,8 @@ from pynput.keyboard import Key, Controller
 
 keyboard = Controller()
 
+languages = [ 'en-US', 'de-DE' ]
+
 keys = {
     'enter': Key.enter,
     'center': Key.enter,
@@ -105,6 +107,7 @@ class SpeechTyper:
 
     def __init__(self, device):
         self.device = device
+        self.language = languages[0]
         self.run_tray()
 
     # this is called from the background thread
@@ -116,7 +119,7 @@ class SpeechTyper:
             # instead of `r.recognize_google(audio)`
             print('~~~')
             self.tray.change_icon('icons/arrows.png')
-            result = recognizer.recognize_google(audio)
+            result = recognizer.recognize_google(audio, language = self.language)
             print('Result: ' + result)
             on_recognize(result)
             print('>>>')
@@ -155,7 +158,7 @@ class SpeechTyper:
         #while True: time.sleep(0.1)  # we're not listening anymore, even though the background thread might still be running for a second or two while cleaning up and stopping
 
     def run_tray(self):
-        menu = ['', ['Pause/Resume listening', 'Exit']]
+        menu = ['', [ 'Default language', languages, 'Pause/Resume listening', 'Exit']]
         tooltip = 'Tooltip'
 
         layout = [[sg.T('Empty Window', key='-T-')]]
@@ -190,16 +193,13 @@ class SpeechTyper:
                 else:
                     self.start_typer()
                     tray.change_icon('icons/active.png')
-            # elif event == 'Sad':
-            #     tray.change_icon(sg.EMOJI_BASE64_FRUSTRATED)
-            # elif event == 'Plain':
-            #     tray.change_icon(sg.DEFAULT_BASE64_ICON)
-            # elif event == 'Hide Icon':
-            #     tray.hide_icon()
-            # elif event == 'Show Icon':
-            #     tray.show_icon()
-            #elif event == 'Change Tooltip':
-            #    tray.set_tooltip(values['-IN-'])
+
+            elif event in languages:
+                self.language = event
+                if self.stop_listening:
+                    self.stop_listening()
+                    self.stop_listening = None
+                    self.start_typer()
 
         tray.close()  # optional but without a close, the icon may "linger" until moused over
         window.close()
