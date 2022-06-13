@@ -63,6 +63,13 @@ replacements = {
     'fifteen': '15',
     'twenty': '20',
     'twentyfive': '25',
+    'get pull': 'git pull',
+    'get paul': 'git pull',
+    'get push': 'git push',
+    'get checkout': 'git checkout',
+    'get branch': 'git branch',
+    'get status': 'git status',
+    'get log': 'git log',
 }
 
 def get_number(n):
