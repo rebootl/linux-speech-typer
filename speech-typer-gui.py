@@ -74,15 +74,6 @@ replacements = {
     'get cherry-pick': 'git cherry-pick ',
 }
 
-# def get_number(n):
-#     try:
-#         i = int(n)
-#         return i
-#     except ValueError:
-#         if (n in numbers):
-#             return numbers[n]
-#         return False
-
 def press_key(k, n = 1):
     for c in range(n):
         keyboard.press(k)
@@ -92,14 +83,6 @@ def press_key(k, n = 1):
 #    with keyboard.pressed(ks[0]):
 #        keyboard.press(ks[1])
 #        keyboard.release(ks[1])
-
-# def get_words_without_number(words):
-#     n = get_number(words[-1:][0])
-#     if n:
-#         r = ' '.join(words[:-1])
-#     else:
-#         r = ' '.join(words)
-#     return r, n
 
 class SpeechTyper:
 
@@ -230,7 +213,6 @@ def main(ARGS):
         list_devices()
     else:
         st = SpeechTyper(ARGS.device)
-        #st.start_typer(ARGS.device)
 
 if __name__ == '__main__':
     DEFAULT_SAMPLE_RATE = 16000
