@@ -1,3 +1,5 @@
+from pynput.keyboard import Key
+
 languages = [ 'en-US', 'de-DE' ]
 
 replacements = {
@@ -37,4 +39,24 @@ replacements = {
     'get log': 'git log',
     'git cherry pick': 'git cherry-pick ',
     'get cherry-pick': 'git cherry-pick ',
+}
+
+keys = {
+    'enter': Key.enter,
+    'center': Key.enter,
+    'hunter': Key.enter,
+    'wetter': Key.enter,
+    'space': Key.space,
+    'keyspace': Key.space,
+    'backspace': Key.backspace,
+    'delete': Key.delete,
+    'arrow left': Key.left,
+    'arrow right': Key.right,
+    'arrow write': Key.right,
+    'arrow up': Key.up,
+    'arrow down': Key.down,
+    'tab': Key.tab,
+    'tabulator': Key.tab,
+    'page up': Key.page_up,
+    'page down': Key.page_down,
 }
