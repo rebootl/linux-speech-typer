@@ -70,16 +70,18 @@ replacements = {
     'get branch': 'git branch',
     'get status': 'git status',
     'get log': 'git log',
+    'git cherry pick': 'git cherry-pick ',
+    'get cherry-pick': 'git cherry-pick ',
 }
 
-def get_number(n):
-    try:
-        i = int(n)
-        return i
-    except ValueError:
-        if (n in numbers):
-            return numbers[n]
-        return False
+# def get_number(n):
+#     try:
+#         i = int(n)
+#         return i
+#     except ValueError:
+#         if (n in numbers):
+#             return numbers[n]
+#         return False
 
 def press_key(k, n = 1):
     for c in range(n):
@@ -91,31 +93,32 @@ def press_key(k, n = 1):
 #        keyboard.press(ks[1])
 #        keyboard.release(ks[1])
 
-def get_words_without_number(words):
-    n = get_number(words[-1:][0])
-    if n:
-        r = ' '.join(words[:-1])
-    else:
-        r = ' '.join(words)
-    return r, n
-
-def on_recognize(text):
-
-    textlower = text.lower()
-
-    if textlower in keys:
-        press_key(keys[textlower])
-    elif textlower in replacements:
-        keyboard.type(replacements[textlower] + ' ')
-    else:
-        keyboard.type(textlower + ' ')
+# def get_words_without_number(words):
+#     n = get_number(words[-1:][0])
+#     if n:
+#         r = ' '.join(words[:-1])
+#     else:
+#         r = ' '.join(words)
+#     return r, n
 
 class SpeechTyper:
 
     def __init__(self, device):
         self.device = device
         self.language = languages[0]
+        self.lowercase = True
         self.run_tray()
+
+    def on_recognize(self, text):
+
+        t = text.lower() if self.lowercase else text
+
+        if t in keys:
+            press_key(keys[t])
+        elif t in replacements:
+            keyboard.type(replacements[t] + ' ')
+        else:
+            keyboard.type(t + ' ')
 
     # this is called from the background thread
     def callback(self, recognizer, audio):
@@ -128,7 +131,7 @@ class SpeechTyper:
             self.tray.change_icon('icons/arrows.png')
             result = recognizer.recognize_google(audio, language = self.language)
             print('Result: ' + result)
-            on_recognize(result)
+            self.on_recognize(result)
             print('>>>')
             self.tray.change_icon('icons/active.png')
         except sr.UnknownValueError:
@@ -165,7 +168,7 @@ class SpeechTyper:
         #while True: time.sleep(0.1)  # we're not listening anymore, even though the background thread might still be running for a second or two while cleaning up and stopping
 
     def run_tray(self):
-        menu = ['', [ 'Default language', languages, 'Pause/Resume listening', 'Exit']]
+        menu = ['', [ 'Lowercase on/off', 'Default language', languages, 'Pause/Resume listening', 'Exit']]
         tooltip = 'Tooltip'
 
         layout = [[sg.T('Empty Window', key='-T-')]]
@@ -200,6 +203,9 @@ class SpeechTyper:
                 else:
                     self.start_typer()
                     tray.change_icon('icons/active.png')
+
+            elif event == 'Lowercase on/off':
+                self.lowercase = not self.lowercase
 
             elif event in languages:
                 self.language = event
