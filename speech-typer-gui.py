@@ -11,9 +11,9 @@ from psgtray import SystemTray
 
 from pynput.keyboard import Key, Controller
 
-keyboard = Controller()
+from config import *
 
-languages = [ 'en-US', 'de-DE' ]
+keyboard = Controller()
 
 keys = {
     'enter': Key.enter,
@@ -33,45 +33,6 @@ keys = {
     'tabulator': Key.tab,
     'page up': Key.page_up,
     'page down': Key.page_down,
-}
-
-replacements = {
-    'equal': '=',
-    'equals': '=',
-    'equal spaced': ' = ',
-    'dash': '-',
-    'backtick': '`',
-    'dollar sign': '$',
-    'one': '1',
-    'two': '2',
-    'to': '2',
-    'three': '3',
-    'tree': '3',
-    'free': '3',
-    'for': '4',
-    'four': '4',
-    'five': '5',
-    'six': '6',
-    'seven': '7',
-    'eight': '8',
-    'nine': '9',
-    'ten': '10',
-    'eleven': '11',
-    'twelve': '12',
-    'thirteen': '13',
-    'fourteen': '14',
-    'fifteen': '15',
-    'twenty': '20',
-    'twentyfive': '25',
-    'get pull': 'git pull',
-    'get paul': 'git pull',
-    'get push': 'git push',
-    'get checkout': 'git checkout',
-    'get branch': 'git branch',
-    'get status': 'git status',
-    'get log': 'git log',
-    'git cherry pick': 'git cherry-pick ',
-    'get cherry-pick': 'git cherry-pick ',
 }
 
 def press_key(k, n = 1):
