@@ -4,6 +4,7 @@ lib/
 lib64/
 venv/
 env/
+__pycache__/
 bg-listening.py
 devices.py
 mic-rec.py
