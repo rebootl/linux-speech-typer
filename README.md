@@ -1,5 +1,5 @@
-# speech-typer-gui
-Linux speech-to-text input w/ system tray
+# linux-speech-typer
+Linux speech-to-text tool w/ system tray
 
 Once running spoken text will be typed at the current cursor location.
 
@@ -15,7 +15,7 @@ I recommend using a virtual environment. However, for the system tray `tk` has t
 
 git clone the Repository or download the zip file and unzip it. And change into the directory.
 
-    git clone https://github.com/rebootl/speech-typer-gui.git
+    git clone https://github.com/rebootl/linux-speech-typer.git
     cd speech-typer-gui/
 
 Setup and activate the virtual environment (optional):
