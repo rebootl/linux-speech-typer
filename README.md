@@ -40,3 +40,7 @@ To launch it in one step use: `/path-to-installation/env/bin/python /path-to-ins
 Different language tags and replacements can be configured in `config.py`.
 
 Find the relevant language codes here: https://cloud.google.com/speech-to-text/docs/languages
+
+The words in the keys dictionary (list) will be executed as corresponding keystrokes.
+
+Please adjust it to your liking.
