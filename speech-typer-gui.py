@@ -1,10 +1,11 @@
-#!/usr/bin/env python3
+#!/usr/bin/env env/bin/python3
 # NOTE: this example requires PyAudio because it uses the Microphone class
 
 import argparse
 import time
 import speech_recognition as sr
 import pyaudio
+import json
 
 import PySimpleGUI as sg
 from psgtray import SystemTray
@@ -29,6 +30,8 @@ class SpeechTyper:
 
     def __init__(self, device):
         self.device = device
+        self.backend = 'vosk'
+        self.model = 'model'
         self.language = languages[0]
         self.lowercase = True
         self.run_tray()
@@ -53,7 +56,11 @@ class SpeechTyper:
             # instead of `r.recognize_google(audio)`
             print('~~~')
             self.tray.change_icon('icons/arrows.png')
-            result = recognizer.recognize_google(audio, language = self.language)
+            if self.backend == 'vosk':
+                result = recognizer.recognize_vosk(audio, language = self.language)
+                result = json.loads(result)['text']
+            else:
+                result = recognizer.recognize_google(audio, language = self.language)
             print('Result: ' + result)
             self.on_recognize(result)
             print('>>>')
@@ -67,6 +74,7 @@ class SpeechTyper:
 
     def start_typer(self):
         r = sr.Recognizer()
+
         m = None
         if self.device:
             m = sr.Microphone()
@@ -91,8 +99,16 @@ class SpeechTyper:
         # do some more unrelated things
         #while True: time.sleep(0.1)  # we're not listening anymore, even though the background thread might still be running for a second or two while cleaning up and stopping
 
+    def restart_listening(self):
+        if self.stop_listening:
+            self.stop_listening()
+            self.stop_listening = None
+            self.start_typer()
+
     def run_tray(self):
-        menu = ['', [ 'Lowercase on/off', 'Default language', languages, 'Pause/Resume listening', 'Exit']]
+        backends = [ 'vosk', 'google' ]
+        menu = ['', [ 'Backend', backends, 'Lowercase on/off', 'Default language',
+                     languages, 'Pause/Resume listening', 'Exit']]
         tooltip = 'Tooltip'
 
         layout = [[sg.T('Empty Window', key='-T-')]]
@@ -131,12 +147,13 @@ class SpeechTyper:
             elif event == 'Lowercase on/off':
                 self.lowercase = not self.lowercase
 
+            elif event in backends:
+                self.backend = event
+                self.restart_listening()
+
             elif event in languages:
                 self.language = event
-                if self.stop_listening:
-                    self.stop_listening()
-                    self.stop_listening = None
-                    self.start_typer()
+                self.restart_listening()
 
         tray.close()  # optional but without a close, the icon may "linger" until moused over
         window.close()
