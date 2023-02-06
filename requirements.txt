@@ -1,8 +1,6 @@
-Pillow==9.1.1
 psgtray==1.0.2
-PyAudio==0.2.11
-PySimpleGUI==4.60.1
-pystray==0.18.0
-python-xlib==0.31
-six==1.16.0
-SpeechRecognition==3.8.1
+PyAudio==0.2.13
+pynput==1.7.6
+PySimpleGUI==4.60.4
+SpeechRecognition==3.9.0
+vosk==0.3.45
