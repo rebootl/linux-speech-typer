@@ -1,11 +1,15 @@
 # linux-speech-typer
 Linux speech-to-text tool w/ system tray
 
-Once running spoken text will be typed at the current cursor location.
+Once running, spoken text will be typed at the current cursor location.
+
+Limitation: Currently this is supporting X-Windows (not Wayland) due to limitation in pynput.
 
 ![screenshot](screenshot.png)
 
-This is based on the python package [Uberi/speech_recognition](https://github.com/Uberi/speech_recognition) and uses the __Google Speech Recognition__ service. Different speech recognition backends are supported by [Uberi/speech_recognition](https://github.com/Uberi/speech_recognition) but currently not implemented here.
+This is based on the python package [Uberi/speech_recognition](https://github.com/Uberi/speech_recognition). It now uses __Vosk API__ (default) and __Google Speech Recognition__ service as backends. Other speech recognition backends are supported by [Uberi/speech_recognition](https://github.com/Uberi/speech_recognition) but currently not implemented here.
+
+Currently the version including [this pull request](https://github.com/Uberi/speech_recognition/pull/657) is used.
 
 ## Installation
 

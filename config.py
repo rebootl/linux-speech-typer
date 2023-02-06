@@ -1,6 +1,6 @@
 from pynput.keyboard import Key
 
-languages = [ 'en-US', 'de-DE' ]
+languages = [ 'en-us', 'de', 'en-US', 'de-DE' ]
 
 replacements = {
     'equal': '=',
@@ -54,6 +54,7 @@ replacements = {
     'get ad': 'git add',
     'get remote': 'git remote',
     'h.top': 'htop',
+    'c d': 'cd',
 }
 
 keys = {

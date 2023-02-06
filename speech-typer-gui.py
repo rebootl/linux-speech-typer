@@ -49,29 +49,29 @@ class SpeechTyper:
 
     # this is called from the background thread
     def callback(self, recognizer, audio):
-        # received audio data, now we'll recognize it using Google Speech Recognition
-        try:
-            # for testing purposes, we're just using the default API key
-            # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
-            # instead of `r.recognize_google(audio)`
-            print('~~~')
-            self.tray.change_icon('icons/arrows.png')
-            if self.backend == 'vosk':
-                result = recognizer.recognize_vosk(audio, language = self.language)
-                result = json.loads(result)['text']
-            else:
+        print('~~~')
+        self.tray.change_icon('icons/arrows.png')
+        if self.backend == 'vosk':
+            result = recognizer.recognize_vosk(audio, language = self.language)
+            print(result)
+            result = json.loads(result)['text']
+        else:
+            # received audio data, now we'll recognize it using Google Speech Recognition
+            try:
+                # for testing purposes, we're just using the default API key
+                # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
+                # instead of `r.recognize_google(audio)`
                 result = recognizer.recognize_google(audio, language = self.language)
-            print('Result: ' + result)
-            self.on_recognize(result)
-            print('>>>')
-            self.tray.change_icon('icons/active.png')
-        except sr.UnknownValueError:
-            print('...')
-            self.tray.change_icon('icons/active.png')
-        except sr.RequestError as e:
-            print('Could not request results from Google Speech Recognition service; {0}'.format(e))
-            self.tray.change_icon('icons/active.png')
-
+            except sr.UnknownValueError:
+                print('...')
+                self.tray.change_icon('icons/active.png')
+            except sr.RequestError as e:
+                print('Could not request results from Google Speech Recognition service; {0}'.format(e))
+                self.tray.change_icon('icons/active.png')
+        print('Result: ' + result)
+        self.on_recognize(result)
+        print('>>>')
+        self.tray.change_icon('icons/active.png')
     def start_typer(self):
         r = sr.Recognizer()
 
@@ -84,6 +84,9 @@ class SpeechTyper:
             #r.adjust_for_ambient_noise(source)  # we only need to calibrate once, before we start listening
             r.energy_threshold = 300  # we only need to calibrate once, before we start listening
             r.dynamic_energy_threshold = False
+
+        #from vosk import Model
+        #r.vosk_model = Model(lang="en-us")
 
         # start listening in the background (note that we don't have to do this inside a `with` statement)
         self.stop_listening = r.listen_in_background(m, self.callback)
