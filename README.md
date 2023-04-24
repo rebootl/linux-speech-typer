@@ -1,4 +1,17 @@
 # linux-speech-typer
+
+__Hint: At this point I'd recommend using [ideasman42/nerd-dictation](https://github.com/ideasman42/nerd-dictation)__
+
+It was developed roughly at the same time and has a number of advantages, namely:
+
+* it's faster due to using streaming capabilities
+* when used with shortcut activation it avoids potential problems with voice activation
+* supports wayland
+
+__Hint 2: Currently this needs a patched version of [Uberi/speech_recognition](https://github.com/Uberi/speech_recognition) that includes this pull request: [ Vosk api: allow selecting different models and automatic model download #657 ](https://github.com/Uberi/speech_recognition/pull/657)__
+
+---
+
 Linux speech-to-text tool w/ system tray
 
 Once running, spoken text will be typed at the current cursor location.
