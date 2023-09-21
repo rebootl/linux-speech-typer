@@ -10,6 +10,8 @@ It was developed roughly at the same time and has a number of advantages, namely
 
 __Hint 2: Currently this needs a patched version of [Uberi/speech_recognition](https://github.com/Uberi/speech_recognition) that includes this pull request: [ Vosk api: allow selecting different models and automatic model download #657 ](https://github.com/Uberi/speech_recognition/pull/657)__
 
+__Hint 3: I switched to using [ideasman42/nerd-dictation](https://github.com/ideasman42/nerd-dictation) and I'm not maintaining or updating this project for the time being. I'm leaving it here for reference purposes.__
+
 ---
 
 Linux speech-to-text tool w/ system tray
