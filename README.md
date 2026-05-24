@@ -1,4 +1,4 @@
-__IMPORTANT NOTICE__: I switched to using [ideasman42/nerd-dictation](https://github.com/ideasman42/nerd-dictation) and I'm not maintaining or updating this project for the time being. I'm leaving it here for reference purposes.__
+__IMPORTANT NOTICE__: I switched to using [ideasman42/nerd-dictation](https://github.com/ideasman42/nerd-dictation) and I'm not maintaining or updating this project for the time being. I'm leaving it here for reference purposes.
 
 # linux-speech-typer
 
